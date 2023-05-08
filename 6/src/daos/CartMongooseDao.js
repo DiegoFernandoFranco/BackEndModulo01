@@ -30,9 +30,9 @@ class CartMongooseDao {
    
     async addProduct(cid, pid) {
         const cartDocument = await cartSchema.findOneAndUpdate(
-            { _id: cid },
-            { $push: { products: { _id: pid, quantity: 1 } }},
-            { new: true}
+            {_id: cid},
+            {$push: {products: {_id: pid, quantity: 1} }},
+            {new: true}
         )
 
         return {
