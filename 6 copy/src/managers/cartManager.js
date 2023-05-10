@@ -1,6 +1,6 @@
 // import ProductMongooseDao from "../daos/ProductMongooseDao.js";
 import CartMongooseDao from "../daos/CartMongooseDao.js";
-import ProductManager from '../managers/productManager.js';
+import ProductManager from './productManager.js';
 import ProductMongooseDao from "../daos/ProductMongooseDao.js";
 
 
