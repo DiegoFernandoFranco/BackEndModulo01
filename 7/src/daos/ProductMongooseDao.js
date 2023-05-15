@@ -16,10 +16,22 @@ class ProductMongooseDao {
             thumbnails: document.thumbnails
         }))
     }
-    async getAllLimit(limite) {
-        const productDocument = await productSchema.find().limit(limite);
+    
+    async getAllPaginate(filtros) {
+        let {limit, page, sort, query} = filtros;
+        
+        query || {};
+        
+        let paginateOptionsConcat;
+        if (sort === undefined) {
+            paginateOptionsConcat = await productSchema.paginate(query, {limit, page})
+        }   else {           
+            paginateOptionsConcat = await productSchema.paginate(query, {limit, page, sort: {price: +sort}})
+        };
 
-        return productDocument.map((document) => ({
+        let productDocument = paginateOptionsConcat;
+        
+        productDocument.docs = productDocument.docs.map((document) => ({
             id: document._id,
             title: document.title,
             description: document.description,
@@ -29,7 +41,9 @@ class ProductMongooseDao {
             stock: document.stock,
             category: document.category,
             thumbnails: document.thumbnails
-        }))
+        }));
+
+        return productDocument;
     }
 
     async getOne(pid) {

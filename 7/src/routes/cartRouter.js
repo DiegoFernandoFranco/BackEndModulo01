@@ -1,7 +1,7 @@
 import {Router} from 'express';
 // import { userModel } from '../models/user.model.js';
 // import userModel from '../models/user.model.js';
-import {getAll, getOne, newCart, addProduct, deleteOne, deleteAll} from '../controllers/cartController.js';
+import {getAll, getOne, newCart, addProduct, deleteOne, deleteAll, deleteProduct, putProductsBody, putQuantityBody, deleteAllProducts} from '../controllers/cartController.js';
 
 const cartRouter = Router();
 
@@ -9,10 +9,15 @@ const cartRouter = Router();
 cartRouter.get('/', getAll);
 cartRouter.get('/:cid', getOne);
 cartRouter.post('/', newCart);
-// cartRouter.post('/:cid/product/:pid', addProduct);
-cartRouter.post('/product/:pid', addProduct);
+cartRouter.post('/:cid/products/:pid', addProduct);
+// cartRouter.post('/:cid', addProduct);
 // cartRouter.put('/:cid', updateOne);
-cartRouter.delete('/:cid', deleteOne);
+// cartRouter.delete('/:cid', deleteOne);
 cartRouter.delete('/', deleteAll);
+
+cartRouter.put('/:cid', putProductsBody);
+cartRouter.put('/:cid/products/:pid', putQuantityBody);
+cartRouter.delete('/:cid/products/:pid', deleteProduct);
+cartRouter.delete('/:cid', deleteAllProducts);
 
 export default cartRouter;

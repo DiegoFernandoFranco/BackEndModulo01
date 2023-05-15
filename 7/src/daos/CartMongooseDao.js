@@ -13,13 +13,16 @@ class CartMongooseDao {
     }
 
     async getOne(cid) {
-        const cartDocument = await cartSchema.findOne({_id: cid});
+        
+        const cartDocument = await cartSchema
+            .findOne({_id: cid})
+            .populate(['products']);
 
         return {
             id: cartDocument._id,
-            products: cartDocument.products,
-        }
-    }
+            products: cartDocument.products
+        };
+    };
 
     async newCart(data) {
         const cartDocument = await cartSchema.create(data);
@@ -30,34 +33,28 @@ class CartMongooseDao {
         }
     }
    
-    // async addProduct(cid, pid) {
-    async addProduct(pid) {
-        const productDocument = await ProductMongooseDao.getOne(pid);
-        // console.log(productDocument)
+    async addProduct(cid, pid) {
+        const xxx = await cartSchema.findOne({ _id: cid, "products._id": pid });
+        
+        let CartDocument;
 
-        return {
-            id: productDocument._id,
-            title: productDocument.title
+        if (xxx) {
+            CartDocument = await cartSchema.findOneAndUpdate(
+            {_id: cid, "products._id": pid},
+            {$inc:{"products.$.quantity":1}},
+            {new: true});            
+
+        }   else {
+            CartDocument = await cartSchema.findOneAndUpdate(
+            {_id: cid},
+            {$push:{products: {_id: pid, quantity:1}}},
+            {new: true})
         }
-
-        // const productDocument = await productSchema.find({_id: pid})
-        // console.log(productDocument)
-        //   const product = await productsModel.findOne({ _id: pid });
-
-
-        // const cartDocument = await cartSchema.findOneAndUpdate(
-        //     {_id: cid},
-        //     {$push: {products: {_id: pid, quantity: 1} }},
-        //     {new: true}
-        // )
-
-        // return {
-        //     id: cartDocument._id,
-        //     products: cartDocument.products
-        // }
-
-        // const cartDocument = db.products.find({_id: '64581f3a307463575c4673d6'})
-        // console.log(cartDocument)
+        
+        return {
+            'Cart id': CartDocument._id,
+            products: CartDocument.products
+        }
    }
 
     async deleteOne(cid) {
@@ -70,6 +67,77 @@ class CartMongooseDao {
         // db.inventory.deleteMany({})
 
     }
-}
 
+    // nuevo
+    async deleteProduct(cid, pid) {   
+        const xxx = await cartSchema.findOne({ _id: cid, "products._id": pid });
+        
+        // si el producto tiene cantidad 1 no puedo restar asi que lo elimino, no puede estar con 0,
+        // por lo menos asi lo veo yo. Que Dios me juzgue.
+         
+        if (xxx.products[0].quantity === 1) {
+            await cartSchema.updateOne(
+                {_id:cid},
+                {$pull:{products: {_id:pid,quantity:1}}}
+            )
+        }
+        
+        let CartDocument;
+
+        if (xxx) {
+            CartDocument = await cartSchema.findOneAndUpdate(
+            {_id: cid, "products._id": pid},
+            {$inc:{"products.$.quantity": -1}},
+            {new: true});            
+
+        }   else {
+            CartDocument = await cartSchema.findOneAndUpdate(
+                {_id: cid},
+                {$push:{products: {_id: pid, quantity:1}}},
+                {new: true}
+            );
+        }
+        
+        return {
+            'Cart id': CartDocument._id,
+            products: CartDocument.products
+        }
+
+    }
+
+    async putProductsBody(cid, products) {
+        // console.log(products)
+        let CartDocument = await cartSchema.findOneAndUpdate (
+            {_id: cid},
+            {$set: {products: products} },
+            {new: true});
+
+        return {
+            'Cart id': CartDocument._id,
+            products: CartDocument.products
+        }
+    };
+
+    async putQuantityBody (cid, pid, quantity) {
+
+        const CartDocument = await cartSchema.findOneAndUpdate(
+            {_id: cid, "products._id": pid},
+            {$set:{"products.$.quantity": quantity}},
+            {new: true}
+        );
+
+        return {
+            'Cart id': CartDocument._id,
+            products: CartDocument.products
+        }
+    }
+
+    async  deleteAllProducts (cid) {
+        return await cartSchema.findByIdAndUpdate(
+            { _id: cid },
+            { $set: { products: [] } },
+            { new: true }
+        );
+  }
+}
 export default CartMongooseDao;

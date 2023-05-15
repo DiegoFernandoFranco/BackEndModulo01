@@ -3,9 +3,35 @@ import mongoose, {Schema} from 'mongoose';
 const cartsCollection = 'carts';
 
 const cartSchema = new Schema({
-    products: {type: Schema.Types.Array, default: []}
-    // products: {type: Schema.Types.String, require: true}    
+    // original sin populate, funciona perfecto
+    // products: {type: Schema.Types.ObjectId, default: []}
+
+    // products: [{type: Schema.Types.ObjectId, ref: 'products'}, 
+    //     {quantity: {type: Schema.Types.Number}}, default: []]
+
+    // no puedo agregar en el array products la key quantity
+    
+    // products: [
+    //       {_id:{type: Schema.Types.ObjectID, ref:'products', quantity: {type: Schema.Types.Number} }, default:[] }
+    // ]
+    
+     products: {
+    type: [
+      {
+        _id: {type: Schema.Types.ObjectId, ref: 'products'},
+        quantity: {type: Schema.Types.Number}
+      }
+    ],
+    default: []
+  }
+
+
+    // products: [
+    //       {_id:{type: Schema.Types.ObjectID, ref:'products', quantity: {type: Schema.Types.Number} }, default:[] }
+    // ]
+  
 });
+
 
 // const productSchema = new Schema({
 //     title: {type: Schema.Types.String, require: true},

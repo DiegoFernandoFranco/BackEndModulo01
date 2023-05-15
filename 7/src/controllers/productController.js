@@ -1,22 +1,33 @@
 import ProductManager from "../managers/productManager.js";
 
-export const getAll = async (req,res) => {   
-    try {
-        if(req.query.limit) {
-            const manager = new ProductManager();
-            const limite = req.query.limit;
-            const products = await manager.getAllLimit(limite);
-            res.send({result: 'success', payload: products})
-        }   else {
 
-            const manager = new ProductManager();
-            let products = await manager.getAll();
-            res.send({result: 'success', payload: products})
-        }
+export const getAll = async (req,res) => {
 
-    }   catch (error) {
-        console.log('Cannot get users with mongoose: ' + error);
-    };
+    const manager = new ProductManager();
+    const products = await manager.getAll()
+
+    res.send({result: 'success', payload: products})
+};
+
+export const getAllPaginate = async (req,res) => {
+    let {limit, page, sort, ...query} = req.query;
+
+    limit = limit || 10;
+    page = page || 1;
+
+    if (Object.keys(query).includes('category')) {
+        query = {category: query.category};
+    }   else if (Object.keys(query).includes('status')){
+        query = {status: query.status};
+    };      
+    const filtros = {limit: limit, page: page, query, sort}
+
+    const manager = new ProductManager();
+    const products = await manager.getAllPaginate(filtros)
+    
+    const {docs, ...paginationOnly} = products;
+
+    res.send({result: 'success', payload: products.docs, paginationData: paginationOnly})  
 };
 
 export const getOne = async (req,res) => {

@@ -22,26 +22,7 @@ class CartManager {
         return this.cartDao.newCart({id: 11});
     }
     async addProduct(cid, pid) {
-        // return this.productDao.getOne(pid);
-        // return this.productDao.getOne(pid);
-        const busqProducto = await this.productDao.getOne(pid);
-        // if (!checkProduct) {
-        //     console.log('producto inexistente')
-        // }
-        // const products = new ProductManager;        
-        // const checkProducto = this.productDao.getOne(pid);
-        // return this.productDao.getOne(pid);
-        
-        // console.log(checkProducto)
-        
-        // const xxx = this.cartDao.addProduct(pid);
-        // console.log(xxx);
-        // return xxx
-
-
-
-
-        // return this.cartDao.addProduct(cid, pid);        
+        return this.cartDao.addProduct(cid, pid);
     }
     // async updateOne(cid, dataToReplace) {    
     //     return this.cartDao.updateOne(cid, dataToReplace)
@@ -54,6 +35,24 @@ class CartManager {
 
     async deleteAll() {
         return this.cartDao.deleteAll()
+    }
+    
+    // nuevo
+
+    async deleteProduct(cid, pid) {
+        return this.cartDao.deleteProduct(cid, pid)
+    }
+
+    async putProductsBody(cid, products) {
+        return this.cartDao.putProductsBody(cid, products)
+    }
+
+    async putQuantityBody (cid, pid, quantity) {
+        return this.cartDao.putQuantityBody (cid, pid, quantity);
+    }
+
+    async deleteAllProducts (cid) {
+        return this.cartDao.deleteAllProducts (cid);
     }
 }
 

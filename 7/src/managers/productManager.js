@@ -9,8 +9,8 @@ class ProductManager {
         return this.dao.getAll();
     }
 
-    async getAllLimit(limite) {
-        return this.dao.getAllLimit(limite);
+    async getAllPaginate(filtros) {
+        return this.dao.getAllPaginate(filtros);
     }
 
     async getOne(pid) {
