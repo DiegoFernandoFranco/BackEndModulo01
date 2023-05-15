@@ -40,7 +40,6 @@ export const getOne = async (req,res) => {
         res.send({result: 'success', payload: product})
 
     }   catch (error) {        
-        // console.log('Cannot get users with mongoose: ' + error);
         res.send({status: 'error', error: 'Product ID Not Found'})
     };
 };

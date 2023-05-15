@@ -1,6 +1,5 @@
 // import ProductMongooseDao from "../daos/ProductMongooseDao.js";
 import CartMongooseDao from "../daos/CartMongooseDao.js";
-import ProductManager from './productManager.js';
 import ProductMongooseDao from "../daos/ProductMongooseDao.js";
 
 
@@ -24,9 +23,10 @@ class CartManager {
     async addProduct(cid, pid) {
         return this.cartDao.addProduct(cid, pid);
     }
-    // async updateOne(cid, dataToReplace) {    
-    //     return this.cartDao.updateOne(cid, dataToReplace)
-    // }
+
+    async updateOne(cid, dataToReplace) {    
+        return this.cartDao.updateOne(cid, dataToReplace)
+    }
 
     async deleteOne(cid) {
         let result = await this.cartDao.deleteOne(cid)

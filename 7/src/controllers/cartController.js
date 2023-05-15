@@ -76,64 +76,18 @@ export const addProduct = async (req, res) => {
 
 
 
-    // if (!existCart) {
-    //     // throw new Error(`Cart ${cid} doesn't exist`);
-    //     res.send({status: 'error', message: 'Cart not found'})
-    // }   else {
+export const updateOne = async (req, res) => {
+    let {pid} = req.params;
 
-    //     res.send({status: 'success', message: 'existe carrito'});
-    // };        
+    const manager = new CartManager();
+    let dataToReplace = req.body;
+    if (!dataToReplace.title||!dataToReplace.description||!dataToReplace.category||!dataToReplace.price||!dataToReplace.code||!dataToReplace.stock) {
+        return res.send({status: 'error', error: 'Incomplete values'});
+    }
 
-        // const productManager = new ProductManager();
-        // const existProduct = await productManager.getOne(pid);
-        // console.log(existProduct);
-        // res.send({status: 'success', message: 'existe producto'});
-
-        // res.send({status: 'success', message: 'existe carrito'});
-
-        // res.send({status: 'error', message: error});
-    
-    // if (!existCart) {
-    //     res.send({status: 'error', error: 'No existe ese carrito'});
-    // }
-
-    // const productManager = new ProductManager();
-    // const existProduct = await productManager.getOne(pid);
-    
-    // if (!existProduct) {
-    //     res.send({status: 'error', error: 'No existe ese producto'});
-    // }
-    // console.log(existProduct);
-
-    // res.send({status: 'success', message: 'existe carrito y producto'});
-
-
-    // const existProduct = await manager
-
-    // try {
-    //     const {cid, pid} = req.params;
-    //     const manager = new CartManager();
-    //     const result = await manager.addProduct(cid, pid);
-    //     res.send({status: 'success', payload: result})
-
-    // }   catch (error) {
-    //     res.send({status: 'error', error: 'rorre, estamos trabajando para solucionarlo'});
-    // }
-     
-
-
-// export const updateOne = async (req, res) => {
-//     let {pid} = req.params;
-
-//     const manager = new CartManager();
-//     let dataToReplace = req.body;
-//     if (!dataToReplace.title||!dataToReplace.description||!dataToReplace.category||!dataToReplace.price||!dataToReplace.code||!dataToReplace.stock) {
-//         return res.send({status: 'error', error: 'Incomplete values'});
-//     }
-
-//     let result = await manager.updateOne(pid, dataToReplace)
-//     res.send({status: 'success', payload: result})
-// };
+    let result = await manager.updateOne(pid, dataToReplace)
+    res.send({status: 'success', payload: result})
+};
 
 export const deleteOne = async (req, res) => {
     let {cid} = req.params;
