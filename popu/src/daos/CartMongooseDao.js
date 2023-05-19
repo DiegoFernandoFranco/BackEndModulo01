@@ -4,41 +4,24 @@ import ProductMongooseDao from './ProductMongooseDao.js';
 
 class CartMongooseDao {
     async getAll() {
-        const cartDocument = await cartSchema.find()
-            .populate(['products']);        
+        const cartDocument = await cartSchema.find();
 
-        // return cartDocument.map((document) => ({
-        //     id: document._id,
-        //     products: document.products
-        // }))
-
-        return {
-            'Cart id': cartDocument._id,
-            products: cartDocument.products.map (product => ({
-                id: product._id,
-                title: product.title
-            }))
-        }
+        return cartDocument.map((document) => ({
+            id: document._id,
+            products: document.products
+        }))
     }
 
     async getOne(cid) {
         
         const cartDocument = await cartSchema
             .findOne({_id: cid})
-            .populate(['products']);
-
-        // return {
-        //     id: cartDocument._id,
-        //     products: cartDocument.products
-        // };
+            .populate(['products._id']);
 
         return {
-            'Cart id': cartDocument._id,
-            products: cartDocument.products.map (product => ({
-                id: product._id,
-                title: product.title
-            }))
-        }
+            id: cartDocument._id,
+            products: cartDocument.products
+        };
     };
 
     async newCart(data) {
@@ -51,9 +34,8 @@ class CartMongooseDao {
     }
    
     async addProduct(cid, pid) {
-        const xxx = await cartSchema.findOne({ _id: cid, "products._id": pid })
-            .populate(['products']);
-
+        const xxx = await cartSchema.findOne({ _id: cid, "products._id": pid });
+        
         let CartDocument;
 
         if (xxx) {
@@ -65,23 +47,14 @@ class CartMongooseDao {
         }   else {
             CartDocument = await cartSchema.findOneAndUpdate(
             {_id: cid},
-            // {$push:{products: {_id: pid, quantity:1}}},
-            {$push:{products: {_id: pid}}},
+            {$push:{products: {_id: pid, quantity:1}}},
             {new: true})
         }
         
         return {
             'Cart id': CartDocument._id,
-            products: CartDocument.products.map (product => ({
-                id: product._id,
-                title: product.title
-            }))
+            products: CartDocument.products
         }
-
-        // return {
-        //     'Cart id': CartDocument._id,
-        //     products: CartDocument.products
-        // }
    }
 
     async deleteOne(cid) {

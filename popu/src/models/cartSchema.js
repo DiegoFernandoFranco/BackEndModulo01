@@ -9,8 +9,8 @@ const cartSchema = new Schema({
     products: {
     type: [
       {
-        _id: {type: Schema.Types.ObjectId, ref: 'products'},
-        quantity: {type: Schema.Types.Number, default: 1}
+        _id: {type: Schema.Types.ObjectId, index: true, ref: 'products'},
+        quantity: {type: Schema.Types.Number}
       }
     ],
     default: []

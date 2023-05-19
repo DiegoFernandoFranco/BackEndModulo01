@@ -4,7 +4,9 @@ import ProductMongooseDao from './ProductMongooseDao.js';
 
 class CartMongooseDao {
     async getAll() {
-        const cartDocument = await cartSchema.find();
+        const cartDocument = await cartSchema
+            .find()
+            .populate(['products._id']);
 
         return cartDocument.map((document) => ({
             id: document._id,
@@ -16,7 +18,7 @@ class CartMongooseDao {
         
         const cartDocument = await cartSchema
             .findOne({_id: cid})
-            .populate(['products']);
+            .populate(['products._id']);
 
         return {
             id: cartDocument._id,
