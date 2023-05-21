@@ -245,7 +245,6 @@ export const putQuantityBody = async (req, res) => {
         
         // validacion producto id
         const productManager = new ProductManager();
-        // const pid = products[0]['_id'];
         
         if (pid.length !== 24) {
             return res.send({status: 'error', message: `Product ID necesita 24 Caracteres, tiene ${pid.length}`})            
@@ -267,20 +266,7 @@ export const putQuantityBody = async (req, res) => {
     }   catch (error) {
             res.send({status: 'error', message: `I'm pretty sure is User Error, or maybe not`, error: error})
     }
-        
-
-    // try {
-    //     const {cid, pid} = req.params;
-    //     const {quantity} = req.body;
-
-    //     const manager = new CartManager();
-    //     const result = await manager.putQuantityBody(cid, pid, quantity);
-    //     res.send({status: 'success', message: `Product quantity updated on Cart`, payload: result})
-
-    // }   catch (error) {
-    //     res.send({status: 'error', message: `Oh No, Oh No, Oh Yeah`, error: error})
-
-    // }    
+    
 };
 
 export const deleteAllProducts = async (req, res) => {

@@ -46,17 +46,7 @@ class CartMongooseDao {
 
         
     };
-    // async getOne(cid) {
-    //     const cartDocument = await cartSchema
-    //         .findOne({_id: cid})
-    //         .populate(['products._id']);
-        
-    //     return {
-    //         id: cartDocument._id,
-    //         products: cartDocument.products
-    //     };
-    // };
-
+    
     async newCart(data) {
         const cartDocument = await cartSchema.create(data);
 
