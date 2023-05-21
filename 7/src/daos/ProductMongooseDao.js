@@ -48,7 +48,10 @@ class ProductMongooseDao {
 
     async getOne(pid) {
         const productDocument = await productSchema.findOne({_id: pid});
-
+        
+        if (productDocument == {} || productDocument == null || !productDocument) {
+            return false;
+        }
         return {
             id: productDocument._id,
             title: productDocument.title,
