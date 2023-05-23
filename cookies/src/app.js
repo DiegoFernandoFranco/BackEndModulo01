@@ -2,15 +2,16 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import express from 'express';
-import productRouter from './routes/productRouter.js';
-import cartRouter from './routes/cartRouter.js';
-import cookieRouter from './routes/cookieRouter.js';
-import sessionRouter from './routes/sessionRouter.js';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import fileStore from 'session-file-store';
 import mongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
+
+import productRouter from './routes/productRouter.js';
+import cartRouter from './routes/cartRouter.js';
+import cookieRouter from './routes/cookieRouter.js';
+import sessionRouter from './routes/sessionRouter.js';
 
 void (async() => {
 
