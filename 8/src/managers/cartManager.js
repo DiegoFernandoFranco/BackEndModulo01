@@ -38,6 +38,9 @@ class CartManager {
     }
     
     // nuevo
+    async isValid(id) {
+        return this.cartDao.isValid(id);
+    }
 
     async deleteProduct(cid, pid) {
         return this.cartDao.deleteProduct(cid, pid)

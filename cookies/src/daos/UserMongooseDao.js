@@ -1,8 +1,9 @@
 import userSchema from "../models/userSchema.js";
 
 class UserMongooseDao {
+    
     async paginate(criteria) {
-        const {limit, page} = criteria;
+        const {firstName, lastName, email, age, password, limit, page} = criteria;
         const userDocuments = await userSchema.paginate({}, {limit, page});
 
         userDocuments.docs = userDocuments.docs.map((document) => ({

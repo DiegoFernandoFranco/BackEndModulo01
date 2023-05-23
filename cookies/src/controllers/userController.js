@@ -1,9 +1,9 @@
 import UserManager from '../managers/userManager.js';
 
 export const list = async (req, res) => {
-    const {name, limit, page} = new UserManager();
+    const {limit, page} = new UserManager();
 
-    const users = await UserManager.paginate({name, limit, page});
+    const users = await UserManager.paginate({limit, page});
     res.send({status: 'success', users: users.docs, ...users, docs: undefined});
 };
 

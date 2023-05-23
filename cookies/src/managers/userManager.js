@@ -17,12 +17,12 @@ class UserManager {
         return this.userDao.create(data);
     }
        
-    async updateOne (id, data) {
-        return this.userDao.updateOne(id, data);
+    async updateOne (uid, data) {
+        return this.userDao.updateOne(uid, data);
     }
    
-    async deleteOne (id) {
-        return this.userDao.deleteOne (id);
+    async deleteOne (uid) {
+        return this.userDao.deleteOne (uid);
     }
    
 };

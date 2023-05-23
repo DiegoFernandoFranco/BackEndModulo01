@@ -1,8 +1,8 @@
 
 export const login = async (req, res) => {
-    const {username, password} = req.body;
+    const {email, password} = req.body;
 
-    if (username !== 'pepe' || password !== '12345678') {
+    if (email !== 'pepe' || password !== '12345678') {
         return res.status(401).send({message: 'Login failed.'})
     }
 
