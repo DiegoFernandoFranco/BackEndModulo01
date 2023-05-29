@@ -32,10 +32,6 @@ class CartManager {
         let result = await this.cartDao.deleteOne(cid)
 
     }
-
-    async deleteAll() {
-        return this.cartDao.deleteAll()
-    }
     
     // nuevo
     async isValid(id) {

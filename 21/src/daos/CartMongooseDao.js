@@ -74,12 +74,6 @@ class CartMongooseDao {
 
     }
 
-    async deleteAll() {
-        const cartDocument = await cartSchema.deleteMany({})
-        // db.inventory.deleteMany({})
-
-    }
-
     // nuevo
     async deleteProduct(cid, pid) {
         // console.log(cid, pid)

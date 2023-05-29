@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import {getAll, getOne, newCart, addProduct, deleteOne, deleteAll, deleteProduct, putProductsBody, putQuantityBody, deleteAllProducts} from '../controllers/cartController.js';
+import {getAll, getOne, newCart, addProduct, deleteOne, deleteProduct, putProductsBody, putQuantityBody, deleteAllProducts} from '../controllers/cartController.js';
 
 const cartRouter = Router();
 
@@ -11,7 +11,6 @@ cartRouter.post('/:cid/products/:pid', addProduct);
 // cartRouter.post('/:cid', addProduct);
 // cartRouter.put('/:cid', updateOne);
 // cartRouter.delete('/:cid', deleteOne);
-cartRouter.delete('/', deleteAll);
 
 cartRouter.put('/:cid', putProductsBody);
 cartRouter.put('/:cid/products/:pid', putQuantityBody);
