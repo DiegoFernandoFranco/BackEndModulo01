@@ -1,5 +1,6 @@
 import CartManager from "../managers/cartManager.js";
 import ProductManager from "../managers/productManager.js";
+import idValidation from "../validations/idValidation.js";
 
 export const getAll = async (req,res) => {
     try {
@@ -12,30 +13,19 @@ export const getAll = async (req,res) => {
     };
 };
 
-export const getOne = async (req,res) => {     
+export const getOne = async (req,res, next) => { // error handler listo
     try {
         const {cid} = req.params;
-
-        if (cid.length !== 24) {
-            return res.send({status: 'error', Error, message: `Cart Id necesita 24 Caracteres, tiene ${cid.length}`})
-        }
-        const manager = new CartManager();
-
-        const valid = await manager.isValid(cid);
-        if (!valid) {
-            return res.send({status: 'error', Error, message: 'Cart Id no existe'})
-        }
+        const idValidateResult = await idValidation.parseAsync(cid);
         
+        const manager = new CartManager();
         const cart = await manager.getOne(cid);
         
-        if (!cart) {
-            return res.send({status: 'error', Error, message: 'Cart Id no existe'})
-        }
         res.send({status: 'success', payload: cart})
-
-    }   catch (error) {       
-        res.send({status: 'error', error: error.message})
-    };
+        
+    }   catch (error) {
+            next (error)
+    }
 };
 
 export const newCart = async (req, res) => {
@@ -52,7 +42,9 @@ export const newCart = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
+
     const {cid, pid} = req.params;    
+    // await idValidation.parseAsync (req.params.cid)
     
     try {
         if (cid.length !== 24) {
@@ -104,14 +96,14 @@ export const updateOne = async (req, res) => {
     res.send({status: 'success', payload: result})
 };
 
-export const deleteOne = async (req, res) => {
+export const deleteOne = async (req, res) => { // error handler
     let {cid} = req.params;
 
+    await idValidation.parseAsync(cid);
+    
     const manager = new CartManager();
-    if (cid.length !== 24) {
-        res.send({status: 'error', error: 'Incorrect id or not Exist'})
-    }
-    let result = await manager.deleteOne(cid)
+    
+    const result = await manager.deleteOne(cid)
     res.send({status: 'success', message: 'Cart deleted'})
 };
 
@@ -219,30 +211,17 @@ export const putProductsBody = async (req, res) => {
     }
 }
 
-export const putQuantityBody = async (req, res) => {
+export const putQuantityBody = async (req, res, next) => {
     try {
         const manager = new CartManager();
 
         const {cid, pid} = req.params;
         const {quantity} = req.body;
 
-        // validacion cart id
-        if (cid.length !== 24) {
-            return res.send({status: 'error', message: `Cart Id necesita 24 Caracteres, tiene ${cid.length}`})            
-        }
-        
-        const cidValid = await manager.isValid(cid);
-        if (!cidValid) {
-            return res.send({status: 'error', Error, message: 'Cart Id no existe'})
-        }
+        await idValidation.parseAsync(cid);
 
         const existCart = await manager.getOne(cid);
 
-        if (existCart == false) {
-            return res.send({status: 'error', message: 'Cart ID No existe'})            
-        }
-        // fin validacion cart id
-        
         // validacion producto id
         const productManager = new ProductManager();
         
@@ -264,40 +243,25 @@ export const putQuantityBody = async (req, res) => {
         res.send({status: 'success', message: `Product quantity updated on Cart`, payload: result})
 
     }   catch (error) {
-            res.send({status: 'error', message: `I'm pretty sure is User Error, or maybe not`, error: error})
+            next(error);
+            // res.send({status: 'error', message: `I'm pretty sure is User Error, or maybe not`, error: error})
     }
     
 };
 
-export const deleteAllProducts = async (req, res) => {
+export const deleteAllProducts = async (req, res, next) => { // error handler listo
     try {
         const manager = new CartManager();
 
-        const {cid} = req.params;
-
-        // validacion cart id
-        if (cid.length !== 24) {
-            return res.send({status: 'error', message: `Cart Id necesita 24 Caracteres, tiene ${cid.length}`})            
-        }
-        
-        const cidValid = await manager.isValid(cid);
-        if (!cidValid) {
-            return res.send({status: 'error', Error, message: 'Cart Id no existe'})
-        }
-
+        const {cid} = req.params;        
+        await idValidation.parseAsync(cid);
         const existCart = await manager.getOne(cid);
-
-        if (existCart == false) {
-            return res.send({status: 'error', message: 'Cart ID No existe'})            
-        }
-        // fin validacion cart id
 
         const result = await manager.deleteAllProducts(cid);
 
         res.send({status: 'success', message: `Cart was emptied`, payload: result});
 
     }   catch (error) {
-            res.send({status: 'error', message: `No se pudieron borrar todos los carritos`, error: error})
-
+            next  (error);
     }
 }

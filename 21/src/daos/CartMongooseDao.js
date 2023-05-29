@@ -20,31 +20,20 @@ class CartMongooseDao {
             return false;        
         }
         return true;
-
     }
 
-    async getOne(cid) {        
-        // comprobación de si es un id valido tipo ObjectId- evita error Cast to ObjectId failed for value
-        // It has to be either 12 byte binary string, or a 24 hex byte string
-        // https://mongoosejs.com/docs/api/mongoose.html#Mongoose.prototype.isValidObjectId()
-        // if (!cid.match(/^[0-9a-fA-F]{24}$/)) {           
-        //     // console.log('_id invalido') // borrar
-        //     return false;        
-        // }
-
+    async getOne(cid) { // error handler listo
         const cartDocument = await cartSchema
             .findOne({_id: cid.toString()})
             .populate(['products._id']);
         
-        if (cartDocument == {} || cartDocument == null || !cartDocument) {
-            return false;
+        if (!cartDocument) {
+            throw new Error ('Cart Id not found')
         }
         return {
             'Cart id': cartDocument._id,
             products: cartDocument.products
-        };
-
-        
+        };        
     };
     
     async newCart(data) {
