@@ -43,33 +43,35 @@ export const newCart = async (req, res) => {
 export const addProduct = async (req, res, next) => {    
     const { cid, pid } = req.params;
   try {
+    // const pruebaZod = await pidValidation.safeParseAsync(pid);
 
-    await cidValidation.parseAsync(cid);
+    // console.log(pruebaZod)
+
+    // await cidValidation.parseAsync(cid);
     await pidValidation.parseAsync(pid);
     
-    const cartManager = new CartManager();
-    const existCart = await cartManager.getOne(cid);
-    console.log(existCart)
+    // const cartManager = new CartManager();
+    // const existCart = await cartManager.getOne(cid);
 
-    const productManager = new ProductManager();        
-    const existProduct = await productManager.getOne(pid);
-    console.log(existProduct)
+    // const productManager = new ProductManager();        
+    // const existProduct = await productManager.getOne(pid);
 
-    const result = await cartManager.addProduct(cid, pid);
+    // const result = await cartManager.addProduct(cid, pid);
     
-    res.status(200).json({status: 'success', message: 'Product added to cart successfully', payload: result});
+    // res.status(200).json({status: 'success', message: 'Product added to cart successfully', payload: result});
+    res.status(200).json({status: 'success', message: 'Product added to cart successfully', payload: pid});
 
   } catch (error) {
-    if (error.name === 'ZodError') {
-      const validationError = error.issues[0];
-      if (validationError && validationError.validation === 'regex' && validationError.message === 'Invalid') {
-        if (cidValidation.safeParse(cid).success === false) {
-          return res.status(400).json({ status: 'error', message: 'cid Not Found' });
-        } else if (pidValidation.safeParse(pid).success === false) {
-          return res.status(400).json({ status: 'error', message: 'pid Not Found' });
-        }
-      }
-    }
+    // if (error.name === 'ZodError') {
+    //   const validationError = error.issues[0];
+    //   if (validationError && validationError.validation === 'regex' && validationError.message === 'Invalid') {
+    //     if (cidValidation.safeParse(cid).success === false) {
+    //       return res.status(400).json({ status: 'error', message: 'cid Not Found' });
+    //     } else if (pidValidation.safeParse(pid).success === false) {
+    //       return res.status(400).json({ status: 'error', message: 'pid Not Found' });
+    //     }
+    //   }
+    // }
 
     next(error);
   }
