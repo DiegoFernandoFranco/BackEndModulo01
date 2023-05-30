@@ -1,6 +1,6 @@
 import CartManager from "../managers/cartManager.js";
 import ProductManager from "../managers/productManager.js";
-import idValidation from "../validations/idValidation.js";
+import {cidValidation, pidValidation} from "../validations/idValidation.js";
 
 export const getAll = async (req, res, next) => {
     try {
@@ -16,7 +16,7 @@ export const getAll = async (req, res, next) => {
 export const getOne = async (req,res, next) => { // error handler listo
     try {
         const {cid} = req.params;
-        const idValidateResult = await idValidation.parseAsync(cid);
+        const idValidateResult = await cidValidation.parseAsync(cid);
         
         const cartManager = new CartManager();
         const cart = await cartManager.getOne(cid);
@@ -41,40 +41,42 @@ export const newCart = async (req, res) => {
 };
 
 export const addProduct = async (req, res, next) => {    
-    try {
-        const {cid, pid} = req.params;    
-        await idValidation.parseAsync(cid);
-                
-        const cartManager = new CartManager();
-        const existCart = await cartManager.getOne(cid);
-        
-        const productManager = new ProductManager();
-        
-        if (pid.length !== 24) {
-            return res.send({status: 'error', message: `Product ID necesita 24 Caracteres, tiene ${pid.length}`})            
-        }
-        
-        const valid = await cartManager.isValid(pid);
-        if (!valid) {
-            return res.send({status: 'error', Error, message: 'Product Id No existe'})
-        }
-        
-        const existProduct = await productManager.getOne(pid);
-        if (!existProduct) {
-            return res.send({status: 'error', Error, message: 'Product Id No existe'})
-        }
+    const { cid, pid } = req.params;
+  try {
 
-        const result = await cartManager.addProduct(cid, pid);
+    await cidValidation.parseAsync(cid);
+    await pidValidation.parseAsync(pid);
+    
+    const cartManager = new CartManager();
+    const existCart = await cartManager.getOne(cid);
+    console.log(existCart)
 
-        res.send({status: 'success', message: 'Product added to Cart', payload: result})
+    const productManager = new ProductManager();        
+    const existProduct = await productManager.getOne(pid);
+    console.log(existProduct)
 
-    }   catch (error) {            
-            res.send({status: 'error', error: error.message})
+    const result = await cartManager.addProduct(cid, pid);
+    
+    res.status(200).json({status: 'success', message: 'Product added to cart successfully', payload: result});
+
+  } catch (error) {
+    if (error.name === 'ZodError') {
+      const validationError = error.issues[0];
+      if (validationError && validationError.validation === 'regex' && validationError.message === 'Invalid') {
+        if (cidValidation.safeParse(cid).success === false) {
+          return res.status(400).json({ status: 'error', message: 'cid Not Found' });
+        } else if (pidValidation.safeParse(pid).success === false) {
+          return res.status(400).json({ status: 'error', message: 'pid Not Found' });
+        }
+      }
     }
+
+    next(error);
+  }
 };
-  
+
 export const updateOne = async (req, res) => {
-    await idValidation.parseAsync(cid);
+    await cidValidation.parseAsync(cid);
 
     let {pid} = req.params;
 
@@ -91,7 +93,7 @@ export const updateOne = async (req, res) => {
 export const deleteOne = async (req, res) => { // error handler
     let {cid} = req.params;
 
-    await idValidation.parseAsync(cid);
+    await cidValidation.parseAsync(cid);
     
     const cartManager = new CartManager();
     
@@ -106,7 +108,7 @@ export const deleteProduct = async (req, res) => {
 
         let {cid, pid} = req.params;
 
-        await idValidation.parseAsync(cid);
+        await cidValidation.parseAsync(cid);
             
         const cartManager = new CartManager();
         const productManager = new ProductManager();        
@@ -143,7 +145,7 @@ export const deleteProduct = async (req, res) => {
 export const putProductsBody = async (req, res) => {
 
     try {
-        await idValidation.parseAsync(cid);
+        await cidValidation.parseAsync(cid);
 
         const products = req.body;
         const {cid} = req.params;
@@ -184,7 +186,7 @@ export const putQuantityBody = async (req, res, next) => {
         const {cid, pid} = req.params;
         const {quantity} = req.body;
 
-        await idValidation.parseAsync(cid);
+        await cidValidation.parseAsync(cid);
 
         const existCart = await cartManager.getOne(cid);
 
@@ -220,7 +222,7 @@ export const deleteAllProducts = async (req, res, next) => { // error handler li
         const cartManager = new CartManager();
 
         const {cid} = req.params;        
-        await idValidation.parseAsync(cid);
+        await cidValidation.parseAsync(cid);
         const existCart = await cartManager.getOne(cid);
 
         const result = await cartManager.deleteAllProducts(cid);

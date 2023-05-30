@@ -13,7 +13,7 @@ class ProductMongooseDao {
             status: document.status,
             stock: document.stock,
             category: document.category,
-            thumbnails: document.thumbnails
+            thumbnails: document.thumbnail
         }))
     }
     
@@ -40,7 +40,7 @@ class ProductMongooseDao {
             status: document.status,
             stock: document.stock,
             category: document.category,
-            thumbnails: document.thumbnails
+            thumbnails: document.thumbnail
         }));
 
         return productDocument;
@@ -61,7 +61,7 @@ class ProductMongooseDao {
             status: productDocument.status,
             stock: productDocument.stock,
             category: productDocument.category,
-            thumbnails: productDocument.thumbnails
+            thumbnails: productDocument.thumbnail
         }
     }
 
