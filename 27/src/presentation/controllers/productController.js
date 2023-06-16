@@ -1,4 +1,4 @@
-import ProductManager from "../managers/productManager.js";
+import ProductManager from '../../domain/managers/productManager.js';
 
 
 export const getAll = async (req,res) => {

@@ -1,6 +1,9 @@
-import CartManager from "../managers/cartManager.js";
-import ProductManager from "../managers/productManager.js";
-import {cidValidation, pidValidation} from "../validations/idValidation.js";
+import CartManager from '../../domain/managers/cartManager.js';
+import ProductManager from '../../domain/managers/productManager.js';
+import {cidValidation, pidValidation} from '../../domain/validations/idValidation.js';
+// import CartManager from "../managers/cartManager.js";
+// import ProductManager from "../managers/productManager.js";
+// import {cidValidation, pidValidation} from "../validations/idValidation.js";
 
 export const getAll = async (req, res, next) => {
     try {
